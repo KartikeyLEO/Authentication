@@ -47,5 +47,10 @@ class UserViewSet(viewsets .ViewSet):
     def destroy(self, request, pk):
         id = pk
         stu = User.objects.get(pk=id)
-        stu.delete()
-        return Response({'msg': 'Data Deleted'})
+        serializer = UserSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            # serializer.save()
+            stu.delete()
+            return Response({'msg': 'Data Deleted'})
+        return Response(serializer.errors)
+    
